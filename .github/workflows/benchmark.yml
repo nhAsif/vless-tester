@@ -1,0 +1,47 @@
+name: VLESS Benchmark & Notify
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install sing-box
+        run: |
+          VERSION=$(curl -s https://api.github.com/repos/SagerNet/sing-box/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          # Remove 'v' prefix if present
+          VERSION_NUM=${VERSION#v}
+          wget https://github.com/SagerNet/sing-box/releases/download/${VERSION}/sing-box-${VERSION_NUM}-linux-amd64.tar.gz
+          tar -xvf sing-box-${VERSION_NUM}-linux-amd64.tar.gz
+          sudo mv sing-box-${VERSION_NUM}-linux-amd64/sing-box /usr/bin/
+
+      - name: Run Benchmark
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python vless_benchmarker.py --workers 20 --top 20 --timeout 5
+
+      - name: Commit & Push Results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add results.csv top_servers.txt
+          git commit -m "Update benchmark results [skip ci]" || echo "No changes to commit"
+          git push

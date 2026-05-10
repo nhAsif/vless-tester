@@ -1,5 +1,5 @@
-vless://8d5e7f2a-3c1b-4d9e-a6f8-2b5c0e7d4a19@dongjing4.zqjsqapi.com:443?encryption=none&security=tls&sni=dongjing4.zqjsqapi.com&type=ws&path=/proxy#🇯🇵[By EbraSha] vless-JP 🔒
-vless://4fe2b7d6-cdc0-44f3-8093-3a1fc92e8542@95.164.3.121:20089?encryption=none&security=none&type=tcp#🇳🇱[By EbraSha] vless-NL 🔒
-vless://d7f67e94-aa9e-4454-b1cf-ce522a0d2728@172.232.208.147:443?encryption=none&security=none&type=tcp#🇮🇹[By EbraSha] vless-IT 🔒
-vless://981fca81-5be1-41f8-ac9b-d138e8109943@43.155.187.201:443?encryption=none&security=tls&sni=babayaga-6i7.pages.dev&type=ws&host=babayaga-6i7.pages.dev&path=%2F%3Fed%3D2560%26Telegram%F0%9F%87%A8%F0%9F%87%B3%40WangCai2#🇨🇦[By EbraSha] vless-CA 🔒
-vless://6202b230-417c-4d8e-b624-0f71afa9c75d@194.154.30.150:443?allowInsecure=1&ed=2560&eh=Sec-WebSocket-Protocol&encryption=none&host=sni.latonyamadeline.ndjp.net&path=%2F&security=tls&sni=sni.latonyamadeline.ndjp.net&type=ws#🇨🇦[By EbraSha] vless-CA 🔒
+vless://388a6c57-87e7-420b-afe2-b3eb670fd7da@172.64.80.1:80?encryption=none&host=vip.yaml7.ggff.net&security=none&type=ws#🎖️87@oneclickvpnkeys
+vless://388a6c57-87e7-420b-afe2-b3eb670fd7da@104.17.150.99:80?encryption=none&host=vip.yaml7.ggff.net&path=/&security=none&type=ws#🐹19@oneclickvpnkeys
+vless://388a6c57-87e7-420b-afe2-b3eb670fd7da@104.17.25.173:80?encryption=none&host=vip.yaml7.ggff.net&security=none&type=ws#🐹16@oneclickvpnkeys
+vless://388a6c57-87e7-420b-afe2-b3eb670fd7da@104.17.145.59:80/?type=ws&encryption=none&flow=&host=vip.yaml7.ggff.net&path=%2F#%3E%3E%40oneclickvpnkeys%3A%3AUS
+vless://388a6c57-87e7-420b-afe2-b3eb670fd7da@172.64.152.23:80?encryption=none&host=vip.yaml7.ggff.net&path=/+@ProxyVPN11&security=none&type=ws#🎖️52@oneclickvpnkeys

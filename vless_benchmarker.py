@@ -381,7 +381,41 @@ async def main():
             writer.writerow([i+1, s.address, s.port, s.security, s.transport, s.latency_avg, s.speed_mbps, s.status, s.error])
     
     console.print(f"[green]Results exported to results.csv[/green]")
+async def send_telegram_notification(servers: List[VLESSServer], token: str, chat_id: str):
+    message = "🚀 *Top 20 VLESS Servers*\n\n"
+    for i, s in enumerate(servers):
+        message += f"{i+1}. `{s.address}` | {s.latency_avg:.1f}ms | {s.speed_mbps:.1f}Mbps\n"
 
+    # Also add the raw URIs for easy copying
+    message += "\n🔗 *Raw URIs:*\n"
+    for s in servers:
+        message += f"`{s.raw_uri}`\n\n"
+
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+
+    # Telegram has a 4096 char limit, we might need to split if it's too long
+    # But for 20 servers it should generally fit if the URIs aren't huge.
+    # We'll truncate if needed for safety.
+    if len(message) > 4000:
+        message = message[:3990] + "..."
+
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.post(url, json={
+                "chat_id": chat_id,
+                "text": message,
+                "parse_mode": "MarkdownV2"
+            }) as response:
+                if response.status == 200:
+                    console.print("[green]Telegram notification sent successfully.[/green]")
+                else:
+                    err = await response.text()
+                    console.print(f"[red]Failed to send Telegram notification: {err}[/red]")
+        except Exception as e:
+            console.print(f"[red]Error sending Telegram notification: {e}[/red]")
+
+async def main():
+...
     # Export top N
     top_working = [s for s in sorted_servers if s.status in ["SUCCESS", "PARTIAL"]][:args.top]
     if top_working:
@@ -389,6 +423,22 @@ async def main():
             for s in top_working:
                 f.write(f"{s.raw_uri}\n")
         console.print(f"[green]Top {len(top_working)} working configs exported to top_servers.txt[/green]")
+
+        # Telegram Notification
+        tg_token = os.getenv("TELEGRAM_BOT_TOKEN")
+        tg_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+        if tg_token and tg_chat_id:
+            # Escape markdown for telegram
+            def escape_md(text):
+                escape_chars = r'_*[]()~`>#+-=|{}.!'
+                return "".join('\\' + c if c in escape_chars else c for c in text)
+
+            # Re-format servers for telegram with escaping
+            for s in top_working:
+                s.address = escape_md(s.address)
+                # raw_uri stays in backticks so it's mostly fine but we should be careful
+
+            await send_telegram_notification(top_working, tg_token, tg_chat_id)
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -27,11 +27,34 @@ A production-quality Python tool for fetching, filtering, and benchmarking VLESS
 pip install -r requirements.txt
 ```
 
-## Usage
+## Automation with GitHub Actions
 
-Run the script with default settings:
+This repository includes a GitHub Actions workflow that automatically runs the benchmark every 6 hours and sends the top 20 servers to a Telegram bot.
+
+### Setup Telegram Notifications
+
+1.  **Create a Telegram Bot:** Talk to [@BotFather](https://t.me/BotFather) to create a bot and get your **API Token**.
+2.  **Get your Chat ID:** Talk to [@userinfobot](https://t.me/userinfobot) to find your **Chat ID**.
+3.  **Add GitHub Secrets:**
+    - Go to your repository **Settings** > **Secrets and variables** > **Actions**.
+    - Add `TELEGRAM_BOT_TOKEN` with your bot's token.
+    - Add `TELEGRAM_CHAT_ID` with your chat ID.
+
+The workflow will also update `results.csv` and `top_servers.txt` in the repository after each run.
+
+## Manual Benchmarking
+
+You can still run the script manually:
+...
+```bash
+python3 vless_benchmarker.py --workers 20 --top 10
+```
+
+To enable Telegram notifications locally, set the environment variables:
 
 ```bash
+export TELEGRAM_BOT_TOKEN="your_token"
+export TELEGRAM_CHAT_ID="your_chat_id"
 python3 vless_benchmarker.py
 ```
 
