@@ -288,6 +288,17 @@ async def main():
             console.print(f"[red]Failed to fetch URL: {e}[/red]")
             sys.exit(1)
 
+    # Detect and decode base64 if necessary
+    import base64
+    try:
+        # Try decoding. If it's valid base64 and contains vless://, use it.
+        decoded = base64.b64decode(content, validate=True).decode('utf-8')
+        if "vless://" in decoded:
+            content = decoded
+    except Exception:
+        # Not base64 or decoding failed, treat as plain text
+        pass
+
     lines = content.splitlines()
     all_servers = []
     for line in lines:
