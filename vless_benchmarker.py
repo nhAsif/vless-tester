@@ -266,7 +266,7 @@ async def pre_filter_servers(servers: List[VLESSServer], timeout: int, workers: 
 
 async def main():
     parser = argparse.ArgumentParser(description="VLESS Server Benchmarker")
-    parser.add_argument("--url", default="https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/refs/heads/main/V2Ray-Config-By-EbraSha.txt", help="Config list URL")
+    parser.add_argument("--url", default="https://github.com/Epodonios/v2ray-configs/raw/main/Splitted-By-Protocol/vless.txt", help="Config list URL")
     parser.add_argument("--timeout", type=int, default=10, help="Timeout per test")
     parser.add_argument("--workers", type=int, default=10, help="Max concurrent testers")
     parser.add_argument("--top", type=int, default=10, help="Number of top servers to export")
