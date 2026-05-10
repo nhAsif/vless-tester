@@ -1,0 +1,55 @@
+Rank,Host,Port,TLS,Transport,Latency Avg,Speed Mbps,Status,Error
+1,dongjing4.zqjsqapi.com,443,tls,ws,164.11463419596353,3.4990498023689036,SUCCESS,
+2,95.164.3.121,20089,none,tcp,220.01218795776367,5.356091881476643,SUCCESS,
+3,172.232.208.147,443,none,tcp,226.08153025309244,5.53163296965109,SUCCESS,
+4,43.155.187.201,443,tls,ws,265.0423049926758,6.461539468821846,SUCCESS,
+5,194.154.30.150,443,tls,ws,335.3581428527832,0.00019554626710786794,SUCCESS,
+6,uk1.fromblancwithlove.com,8443,tls,tcp,360.2596124013265,4.574994433696635,SUCCESS,
+7,91.244.70.205,443,none,ws,369.77529525756836,4.020354324359363,SUCCESS,
+8,139.84.235.99,443,tls,ws,413.4342670440674,0.00016499805353858716,SUCCESS,
+9,50.228.203.26,443,tls,ws,482.4973742167155,3.477370953206469,SUCCESS,
+10,50.228.203.26,443,tls,ws,485.7776959737142,3.4453365084427316,SUCCESS,
+11,50.228.203.26,443,tls,ws,488.3139133453369,3.215264423203611,SUCCESS,
+12,195.181.173.199,8443,tls,tcp,548.9629109700521,4.751144017818331,SUCCESS,
+13,8.216.21.135,10026,none,tcp,109.40106709798177,0.0,PARTIAL,Speed test failed: 
+14,ul-mexico1.09vpn.com,8443,tls,ws,506.94600741068524,0.0,PARTIAL,Speed test failed: General SOCKS server failure
+15,38.180.11.15,443,tls,ws,634.3754927317301,0.0,PARTIAL,Speed test failed: 
+16,vpn3.rnmcnm.com,443,tls,ws,1476.434350013733,0.0,PARTIAL,Speed test failed: 
+17,v2ray.simspeedup.com,80,none,ws,2602.0383834838867,0.0,PARTIAL,Speed test failed: 
+18,45.15.160.132,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+19,138.124.99.126,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+20,138.124.9.190,16558,reality,tcp,0.0,0.0,FAILED,Latency test failed
+21,45.12.133.207,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+22,47.243.112.34,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+23,8.210.175.100,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+24,145.239.8.221,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+25,165.232.86.81,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+26,178.159.10.78,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+27,2.56.127.207,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+28,45.82.254.107,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+29,45.83.21.39,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+30,51.158.62.94,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+31,64.176.166.143,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+32,64.176.57.250,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+33,70.34.201.81,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+34,77.81.98.70,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+35,78.141.199.54,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+36,91.199.50.37,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+37,7qqrbome80g.country-27.de-nfast.com,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+38,7qqrbome80g.country-27.de-nfast.com,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+39,79.141.171.133,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+40,77.92.145.222,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+41,89.106.83.45,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+42,89.106.83.49,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+43,82.26.91.244,443,reality,grpc,0.0,0.0,FAILED,Latency test failed
+44,152.53.1.32,7443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+45,s306.okgg.top,443,tls,tcp,0.0,0.0,FAILED,Latency test failed
+46,47.79.144.103,25242,none,ws,0.0,0.0,FAILED,Latency test failed
+47,144.31.131.33,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+48,72.56.62.253,22231,tls,tcp,0.0,0.0,FAILED,Latency test failed
+49,95.85.243.216,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+50,82.38.63.246,8443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+51,103.231.73.181,8443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+52,2.56.172.83,8443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+53,45.12.146.179,8443,reality,tcp,0.0,0.0,FAILED,Latency test failed
+54,85.159.229.84,443,reality,tcp,0.0,0.0,FAILED,Latency test failed
