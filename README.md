@@ -39,6 +39,10 @@ This repository includes a GitHub Actions workflow that automatically runs the b
     - Go to your repository **Settings** > **Secrets and variables** > **Actions**.
     - Add `TELEGRAM_BOT_TOKEN` with your bot's token.
     - Add `TELEGRAM_CHAT_ID` with your chat ID.
+4.  **Enable Workflow Write Permissions:**
+    - Go to your repository **Settings** > **Actions** > **General**.
+    - Scroll down to **Workflow permissions**.
+    - Select **Read and write permissions** and click **Save**.
 
 The workflow will also update `results.csv` and `top_servers.txt` in the repository after each run.
 
