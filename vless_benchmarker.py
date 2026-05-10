@@ -121,11 +121,6 @@ class SingBoxInstance:
             if self.server.alpn:
                 tls_conf["alpn"] = [a.strip() for a in self.server.alpn.split(",")]
             
-            if self.server.security == "reality":
-                # Reality specific params might need more parsing if present
-                # but common ones are often in query
-                pass
-            
             outbound["tls"] = tls_conf
 
         transport_conf = {}
@@ -264,6 +259,36 @@ async def pre_filter_servers(servers: List[VLESSServer], timeout: int, workers: 
     progress.remove_task(task_id)
     return alive_servers
 
+async def send_telegram_notification(servers: List[VLESSServer], token: str, chat_id: str):
+    message = "🚀 *Top VLESS Servers*\n\n"
+    for i, s in enumerate(servers):
+        message += f"{i+1}. `{s.address}` | {s.latency_avg:.1f}ms | {s.speed_mbps:.1f}Mbps\n"
+    
+    message += "\n🔗 *Raw URIs:*\n"
+    for s in servers:
+        message += f"`{s.raw_uri}`\n\n"
+
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    
+    # Simple split if too long (very basic)
+    if len(message) > 4000:
+        message = message[:3990] + "..."
+
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.post(url, json={
+                "chat_id": chat_id,
+                "text": message,
+                "parse_mode": "MarkdownV2"
+            }) as response:
+                if response.status == 200:
+                    console.print("[green]Telegram notification sent successfully.[/green]")
+                else:
+                    err = await response.text()
+                    console.print(f"[red]Failed to send Telegram notification: {err}[/red]")
+        except Exception as e:
+            console.print(f"[red]Error sending Telegram notification: {e}[/red]")
+
 async def main():
     parser = argparse.ArgumentParser(description="VLESS Server Benchmarker")
     parser.add_argument("--url", default="https://github.com/Epodonios/v2ray-configs/raw/main/Splitted-By-Protocol/vless.txt", help="Config list URL")
@@ -291,12 +316,10 @@ async def main():
     # Detect and decode base64 if necessary
     import base64
     try:
-        # Try decoding. If it's valid base64 and contains vless://, use it.
         decoded = base64.b64decode(content, validate=True).decode('utf-8')
         if "vless://" in decoded:
             content = decoded
     except Exception:
-        # Not base64 or decoding failed, treat as plain text
         pass
 
     lines = content.splitlines()
@@ -331,7 +354,6 @@ async def main():
         await asyncio.gather(*tasks)
 
     # Sorting
-    # Success first, then by latency avg
     sorted_servers = sorted(
         alive_servers,
         key=lambda x: (
@@ -381,41 +403,7 @@ async def main():
             writer.writerow([i+1, s.address, s.port, s.security, s.transport, s.latency_avg, s.speed_mbps, s.status, s.error])
     
     console.print(f"[green]Results exported to results.csv[/green]")
-async def send_telegram_notification(servers: List[VLESSServer], token: str, chat_id: str):
-    message = "🚀 *Top 20 VLESS Servers*\n\n"
-    for i, s in enumerate(servers):
-        message += f"{i+1}. `{s.address}` | {s.latency_avg:.1f}ms | {s.speed_mbps:.1f}Mbps\n"
 
-    # Also add the raw URIs for easy copying
-    message += "\n🔗 *Raw URIs:*\n"
-    for s in servers:
-        message += f"`{s.raw_uri}`\n\n"
-
-    url = f"https://api.telegram.org/bot{token}/sendMessage"
-
-    # Telegram has a 4096 char limit, we might need to split if it's too long
-    # But for 20 servers it should generally fit if the URIs aren't huge.
-    # We'll truncate if needed for safety.
-    if len(message) > 4000:
-        message = message[:3990] + "..."
-
-    async with aiohttp.ClientSession() as session:
-        try:
-            async with session.post(url, json={
-                "chat_id": chat_id,
-                "text": message,
-                "parse_mode": "MarkdownV2"
-            }) as response:
-                if response.status == 200:
-                    console.print("[green]Telegram notification sent successfully.[/green]")
-                else:
-                    err = await response.text()
-                    console.print(f"[red]Failed to send Telegram notification: {err}[/red]")
-        except Exception as e:
-            console.print(f"[red]Error sending Telegram notification: {e}[/red]")
-
-async def main():
-...
     # Export top N
     top_working = [s for s in sorted_servers if s.status in ["SUCCESS", "PARTIAL"]][:args.top]
     if top_working:
@@ -428,17 +416,25 @@ async def main():
         tg_token = os.getenv("TELEGRAM_BOT_TOKEN")
         tg_chat_id = os.getenv("TELEGRAM_CHAT_ID")
         if tg_token and tg_chat_id:
-            # Escape markdown for telegram
             def escape_md(text):
                 escape_chars = r'_*[]()~`>#+-=|{}.!'
                 return "".join('\\' + c if c in escape_chars else c for c in text)
-
-            # Re-format servers for telegram with escaping
+            
+            # Use a copy for telegram formatting
+            tg_servers = []
             for s in top_working:
-                s.address = escape_md(s.address)
-                # raw_uri stays in backticks so it's mostly fine but we should be careful
-
-            await send_telegram_notification(top_working, tg_token, tg_chat_id)
+                # Create a shallow copy to avoid modifying original address for CSV/Table
+                s_copy = VLESSServer(
+                    raw_uri=escape_md(s.raw_uri),
+                    uuid=s.uuid,
+                    address=escape_md(s.address),
+                    port=s.port
+                )
+                s_copy.latency_avg = s.latency_avg
+                s_copy.speed_mbps = s.speed_mbps
+                tg_servers.append(s_copy)
+            
+            await send_telegram_notification(tg_servers, tg_token, tg_chat_id)
 
 if __name__ == "__main__":
     asyncio.run(main())
