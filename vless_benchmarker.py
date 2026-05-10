@@ -284,7 +284,11 @@ async def send_telegram_notification(servers: List[VLESSServer], token: str, cha
 
     full_message = header + body
     if len(full_message) > 4000:
-        full_message = full_message[:3990] + "\\.\\.\\."
+        truncated = full_message[:3980]
+        # Count backticks to see if we're inside a code block
+        if truncated.count('`') % 2 != 0:
+            truncated += "`"
+        full_message = truncated + "\\.\\.\\."
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
