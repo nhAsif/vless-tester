@@ -260,25 +260,39 @@ async def pre_filter_servers(servers: List[VLESSServer], timeout: int, workers: 
     return alive_servers
 
 async def send_telegram_notification(servers: List[VLESSServer], token: str, chat_id: str):
-    message = "🚀 *Top VLESS Servers*\n\n"
+    def escape_md(text):
+        # Characters reserved in MarkdownV2: _ * [ ] ( ) ~ ` > # + - = | { } . !
+        # Added | and others to the list
+        escape_chars = r'_*[]()~`>#+-=|{}.!'
+        return "".join('\\' + c if c in escape_chars else c for c in text)
+
+    header = "🚀 *Top VLESS Servers*\n\n"
+    body = ""
     for i, s in enumerate(servers):
-        message += f"{i+1}. `{s.address}` | {s.latency_avg:.1f}ms | {s.speed_mbps:.1f}Mbps\n"
+        # Escape EVERYTHING that isn't a Markdown symbol
+        idx = escape_md(str(i+1))
+        addr = escape_md(s.address)
+        lat = escape_md(f"{s.latency_avg:.1f}")
+        speed = escape_md(f"{s.speed_mbps:.1f}")
+        pipe = escape_md("|")
+        body += f"{idx}\\. `{addr}` {pipe} {lat}ms {pipe} {speed}Mbps\n"
     
-    message += "\n🔗 *Raw URIs:*\n"
+    body += "\n🔗 *Raw URIs:*\n"
     for s in servers:
-        message += f"`{s.raw_uri}`\n\n"
+        uri = escape_md(s.raw_uri)
+        body += f"`{uri}`\n\n"
+
+    full_message = header + body
+    if len(full_message) > 4000:
+        full_message = full_message[:3990] + "\\.\\.\\."
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
-    
-    # Simple split if too long (very basic)
-    if len(message) > 4000:
-        message = message[:3990] + "..."
 
     async with aiohttp.ClientSession() as session:
         try:
             async with session.post(url, json={
                 "chat_id": chat_id,
-                "text": message,
+                "text": full_message,
                 "parse_mode": "MarkdownV2"
             }) as response:
                 if response.status == 200:
@@ -416,25 +430,7 @@ async def main():
         tg_token = os.getenv("TELEGRAM_BOT_TOKEN")
         tg_chat_id = os.getenv("TELEGRAM_CHAT_ID")
         if tg_token and tg_chat_id:
-            def escape_md(text):
-                escape_chars = r'_*[]()~`>#+-=|{}.!'
-                return "".join('\\' + c if c in escape_chars else c for c in text)
-            
-            # Use a copy for telegram formatting
-            tg_servers = []
-            for s in top_working:
-                # Create a shallow copy to avoid modifying original address for CSV/Table
-                s_copy = VLESSServer(
-                    raw_uri=escape_md(s.raw_uri),
-                    uuid=s.uuid,
-                    address=escape_md(s.address),
-                    port=s.port
-                )
-                s_copy.latency_avg = s.latency_avg
-                s_copy.speed_mbps = s.speed_mbps
-                tg_servers.append(s_copy)
-            
-            await send_telegram_notification(tg_servers, tg_token, tg_chat_id)
+            await send_telegram_notification(top_working, tg_token, tg_chat_id)
 
 if __name__ == "__main__":
     asyncio.run(main())
