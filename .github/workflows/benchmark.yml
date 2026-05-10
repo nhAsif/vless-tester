@@ -3,7 +3,12 @@ name: VLESS Benchmark & Notify
 on:
   schedule:
     - cron: '0 */6 * * *' # Every 6 hours
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      config_url:
+        description: 'Custom VLESS Config List URL (Leave empty for default)'
+        required: false
+        default: ''
 
 jobs:
   benchmark:
@@ -35,8 +40,13 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          INPUT_URL: ${{ github.event.inputs.config_url }}
         run: |
-          python vless_benchmarker.py --workers 20 --top 20 --timeout 5
+          if [ -n "$INPUT_URL" ]; then
+            python vless_benchmarker.py --workers 20 --top 20 --timeout 5 --url "$INPUT_URL"
+          else
+            python vless_benchmarker.py --workers 20 --top 20 --timeout 5
+          fi
 
       - name: Commit & Push Results
         run: |
