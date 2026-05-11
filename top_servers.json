@@ -1,0 +1,18 @@
+[
+    {
+        "host": "95.164.3.121",
+        "port": 20089,
+        "uuid": "4fe2b7d6-cdc0-44f3-8093-3a1fc92e8542",
+        "tls": false,
+        "wsPath": "",
+        "wsHeaderHost": ""
+    },
+    {
+        "host": "172.232.208.147",
+        "port": 443,
+        "uuid": "d7f67e94-aa9e-4454-b1cf-ce522a0d2728",
+        "tls": false,
+        "wsPath": "",
+        "wsHeaderHost": ""
+    }
+]

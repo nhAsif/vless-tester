@@ -1,0 +1,6 @@
+.env
+config_*.json
+results.csv
+top_servers.txt
+__pycache__/
+*.pyc
